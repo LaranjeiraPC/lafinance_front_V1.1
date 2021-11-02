@@ -9,3 +9,26 @@
 <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
     <button pButton type="button" label="Salvar" icon="pi pi-check" routerLink="/acao/insert"></button>
 </span>
+
+<div class="col-g12">
+    <span class="p-float-label" [ngStyle]="{'padding': '0.2%', 'float': 'left'}">
+        <input id="float-input" type="text" pInputText [(ngModel)]="value2"> 
+        <label for="float-input">Quantidade</label>
+    </span>
+
+    <span class="p-float-label" [ngStyle]="{'padding': '0.2%', 'float': 'left'}">
+        <input id="float-input" type="text" pInputText [(ngModel)]="value2"> 
+        <label for="float-input">Valor Bruto Pago</label>
+    </span>
+
+    <span class="p-float-label" [ngStyle]="{'padding': '0.2%', 'float': 'left'}">
+        <input id="float-input" type="text" pInputText [(ngModel)]="value2"> 
+        <label for="float-input">Valor Ativo Pago</label>
+    </span>
+
+    <div class="p-field p-col-12 p-md-4" [ngStyle]="{'padding': '0.2%', 'float': 'left'}">
+        <label for="icon">Mês Compra</label>
+        <p-calendar [(ngModel)]="date3" [showIcon]="true" inputId="icon" dateFormat="dd/mm/yy"></p-calendar>
+    </div>
+</div>
+
