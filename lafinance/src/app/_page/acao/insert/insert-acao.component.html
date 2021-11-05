@@ -1,11 +1,44 @@
-<app-title
-    [title]="'Cadastrar Ação'">
-</app-title>
+<p-messages></p-messages>
 
-<span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
-    <button pButton type="button" label="Cancelar" icon="pi pi-check" routerLink="/acao/insert"></button>
-</span>
+<div class="p-grid p-fluid">
+    <app-title [title]="'Cadastrar Ação'"></app-title>
 
-<span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
-    <button pButton type="button" label="Salvar" icon="pi pi-check" routerLink="/acao/insert"></button>
-</span>
+    <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
+        <button pButton pRipple type="button" label="Salvar" class="p-button-raised"
+            (click)="showViaService()"></button>
+    </span>
+
+    <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%', 'color': ''}">
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"></button>
+    </span>
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="withoutgrouping">Quantidade</label>
+            <p-inputNumber [(ngModel)]="acao.quantidade" mode="decimal" inputId="pInputQuantidadeText"
+                [useGrouping]="false">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="minmaxfraction">Valor Ativo Pago</label>
+            <p-inputNumber [(ngModel)]="acao.valorAtivoPago" inputId="pInputValorAtivoPagoText" mode="decimal"
+                [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="minmaxfraction">Valor Bruto Pago</label>
+            <p-inputNumber [(ngModel)]="acao.valorBrutoPago" inputId="pInputValorBrutoPagoText" mode="decimal"
+                [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="icon">Mês Compra</label>
+            <p-calendar [(ngModel)]="acao.dataCompra" [showIcon]="true" inputId="icon" dateFormat="dd/mm/yy">
+            </p-calendar>
+        </div>
+    </div>
+
+</div>
