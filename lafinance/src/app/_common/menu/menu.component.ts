@@ -24,15 +24,15 @@ export class MenuComponent implements OnInit {
         }
       },
       {
-        label: 'Ação', icon: 'pi pi-fw pi-calendar', command: (event) => {
+        label: 'Ação', icon: 'pi pi-fw pi-wallet', command: (event) => {
           this.router.navigate(['/acao'])
         }
       },
-      { label: 'Venda', icon: 'pi pi-fw pi-pencil' },
-      { label: 'Ativo', icon: 'pi pi-fw pi-pencil' },
-      { label: 'Relatório Compra', icon: 'pi pi-fw pi-pencil' },
-      { label: 'Relatório Venda', icon: 'pi pi-fw pi-pencil' },
-      { label: 'Gráfico', icon: 'pi pi-fw pi-pencil' },
+      { label: 'Venda', icon: 'pi pi-fw pi-shopping-cart' },
+      { label: 'Ativo', icon: 'pi pi-fw pi-file' },
+      { label: 'Rel. Compra', icon: 'pi pi-fw pi-book' },
+      { label: 'Rel. Venda', icon: 'pi pi-fw pi-book' },
+      { label: 'Gráfico', icon: 'pi pi-fw pi-chart-line' },
       { label: 'Documentation', icon: 'pi pi-fw pi-file' },
       { label: 'Settings', icon: 'pi pi-fw pi-cog' }
     ];

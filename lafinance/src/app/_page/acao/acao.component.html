@@ -1,7 +1,50 @@
-<app-title
-    [title]="'Ação'">
-</app-title>
+<div class="p-grid p-fluid">
+    <app-title [title]="'Ação'"></app-title>
 
-<span class="p-buttonset" [ngStyle]="{'float': 'right'}">
-    <button pButton type="button" label="Adicionar" icon="pi pi-check" routerLink="/acao/insert"></button>
-</span>
+    <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
+        <button pButton pRipple type="button" label="Adicionar" class="p-button-raised"
+            routerLink="/acao/insert"></button>
+    </span>
+
+    <div class="table">
+        <div class="p-title-table">Ações Ativos</div>
+        <p-table [value]="acoes" [lazy]="true" (onLazyLoad)="loadCustomers($event)" responsiveLayout="scroll"
+            [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading"
+            [globalFilterFields]="['ativo']">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="ativo">Ativo <p-sortIcon field="ativo"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="prPago">Preço Pago <p-sortIcon field="ativo"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="totBrPago">Total Bruto Pago <p-sortIcon field="ativo"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="qtd">Quantidade <p-sortIcon field="ativo"></p-sortIcon>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter type="text" field="'Ativo'"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="'prPago'"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="'totBrPago'"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="'qtd'"></p-columnFilter>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-acao>
+                <tr>
+                    <td>{{acao.ativo.nome}}</td>
+                    <td>{{acao.valorAtivoPago}}</td>
+                    <td>{{acao.valorBrutoPago}}</td>
+                    <td>{{acao.quantidade}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

@@ -10,6 +10,11 @@ import { TitleModule } from "src/app/_common/title/title.module";
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
+import { TableModule } from 'primeng/table';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { MessageService } from "primeng/api";
 
 @NgModule({
     declarations: [
@@ -25,8 +30,15 @@ import { CalendarModule } from 'primeng/calendar';
         TitleModule,
         InputTextModule,
         FormsModule,
-        CalendarModule
+        CalendarModule,
+        TableModule,
+        InputNumberModule,
+        MessagesModule,
+        MessageModule,
     ],
     exports: [CalendarModule],
+    providers: [
+        MessageService, // seu provider aqui
+    ]
 })
 export class AcaoModule { } 
