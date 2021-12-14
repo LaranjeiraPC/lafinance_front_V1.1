@@ -1,36 +1,36 @@
 export class Ativo {
 
-    private _id;
-    private _nome;
-    private _status;
+    id;
+    nome;
+    status;
 
     constructor() {
-        this._id = 0;
-        this._nome = "";
-        this._status = "";
+        this.id = 0;
+        this.nome = "";
+        this.status = "";
     }
 
-    get id() {
-        return this._id
+    get _id() {
+        return this.id
     }
 
-    set id(id) {
+    set _id(id) {
         this._id = id
     }
 
-    get nome() {
-        return this._nome
+    get _nome() {
+        return this.nome
     }
 
-    set nome(nome) {
+    set _nome(nome) {
         this._nome = nome
     }
 
-    get status() {
-        return this._status
+    get _status() {
+        return this.status
     }
 
-    set status(status) {
+    set _status(status) {
         this._status = status
     }
 }
