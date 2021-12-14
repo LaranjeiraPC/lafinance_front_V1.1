@@ -10,16 +10,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { AtivoModule } from './_page/ativo/ativo.module';
+import { registerLocaleData } from '@angular/common';
+import localePT from '@angular/common/locales/pt';
+import { VendaModule } from './_page/venda/venda.module';
+
+registerLocaleData(localePT);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DashModule,
     AcaoModule,
+    VendaModule,
+    AtivoModule,
     MenuModule,
     BrowserAnimationsModule,
     MessagesModule,

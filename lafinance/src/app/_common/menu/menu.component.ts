@@ -28,8 +28,15 @@ export class MenuComponent implements OnInit {
           this.router.navigate(['/acao'])
         }
       },
-      { label: 'Venda', icon: 'pi pi-fw pi-shopping-cart' },
-      { label: 'Ativo', icon: 'pi pi-fw pi-file' },
+      { label: 'Venda', icon: 'pi pi-fw pi-shopping-cart', command: (event) => {
+        this.router.navigate(['/venda'])
+        }
+      },
+      {
+        label: 'Ativo', icon: 'pi pi-fw pi-shopping-cart', command: (event) => {
+          this.router.navigate(['/ativo'])
+        }
+      },
       { label: 'Rel. Compra', icon: 'pi pi-fw pi-book' },
       { label: 'Rel. Venda', icon: 'pi pi-fw pi-book' },
       { label: 'Gráfico', icon: 'pi pi-fw pi-chart-line' },

@@ -1,3 +1,5 @@
+<p-messages class="message"></p-messages>
+
 <div class="p-grid p-fluid">
     <app-title [title]="'Ação'"></app-title>
 
@@ -8,43 +10,123 @@
 
     <div class="table">
         <div class="p-title-table">Ações Ativos</div>
-        <p-table [value]="acoes" [lazy]="true" (onLazyLoad)="loadCustomers($event)" responsiveLayout="scroll"
-            [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading"
-            [globalFilterFields]="['ativo']">
+        <p-table [value]="acoes" responsiveLayout="scroll" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
+            [loading]="loading">
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="ativo">Ativo <p-sortIcon field="ativo"></p-sortIcon>
+                    <th pSortableColumn="ativo.nome">Ativo <p-sortIcon field="ativo.nome"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="prPago">Preço Pago <p-sortIcon field="ativo"></p-sortIcon>
+                    <th pSortableColumn="valorAtivoPago">Preço Pago<p-sortIcon field="valorAtivoPago"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="totBrPago">Total Bruto Pago <p-sortIcon field="ativo"></p-sortIcon>
+                    <th pSortableColumn="valorBrutoPago">Total Bruto Pago <p-sortIcon field="valorBrutoPago">
+                        </p-sortIcon>
                     </th>
-                    <th pSortableColumn="qtd">Quantidade <p-sortIcon field="ativo"></p-sortIcon>
+                    <th pSortableColumn="quantidade">Quantidade <p-sortIcon field="quantidade"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="dataCompra">Mês Compra <p-sortIcon field="dataCompra"></p-sortIcon>
+                    </th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th>
-                        <p-columnFilter type="text" field="'Ativo'"></p-columnFilter>
+                        <p-columnFilter type="text" field="ativo.nome"></p-columnFilter>
                     </th>
                     <th>
-                        <p-columnFilter type="text" field="'prPago'"></p-columnFilter>
+                        <p-columnFilter type="text" field="valorAtivoPago"></p-columnFilter>
                     </th>
                     <th>
-                        <p-columnFilter type="text" field="'totBrPago'"></p-columnFilter>
+                        <p-columnFilter type="text" field="valorBrutoPago"></p-columnFilter>
                     </th>
                     <th>
-                        <p-columnFilter type="text" field="'qtd'"></p-columnFilter>
+                        <p-columnFilter type="text" field="quantidade"></p-columnFilter>
                     </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-acao>
                 <tr>
                     <td>{{acao.ativo.nome}}</td>
-                    <td>{{acao.valorAtivoPago}}</td>
-                    <td>{{acao.valorBrutoPago}}</td>
+                    <td>{{acao.valorAtivoPago | currency:'BRL':true}}</td>
+                    <td>{{acao.valorBrutoPago | currency:'BRL':true}}</td>
                     <td>{{acao.quantidade}}</td>
+                    <td>{{acao.dataCompra | date: 'dd/MM/yyyy'}}</td>
+                    <td>
+                        <button type="button" pButton pRipple icon="pi pi-microsoft"
+                            (click)="selectAcao(acao)"></button>
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
+
+<p-dialog header="Editar Ação" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false" [contentStyle]="{'overflow': 'visible'}">
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Preço Unitário</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedAcao.valorAtivoPago"
+                inputId="pInputvalorAtivoPagoText" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Valor Total Pago</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedAcao.valorBrutoPago"
+                inputId="pInputValorBrutoPagoText" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Quantidade</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedAcao.quantidade" mode="decimal"
+                inputId="pInputQuantidadeText" [useGrouping]="false">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Nova Data Compra</label>
+            <p-calendar [(ngModel)]="dataCompra" [ngStyle]="{'height': '40px'}" [showIcon]="true" inputId="icon"
+                dateFormat="dd/mm/yy">
+            </p-calendar>
+        </div>
+
+        <div [ngStyle]="{'padding': '1%', 'width': '100%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Última Data Compra</label>
+            {{selectedAcao.dataCompra | date:'dd/MM/yyyy'}}
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Excluir" class="p-button-raised p-button-danger"
+            (click)="excluirAcao(selectedAcao)"></button>
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModal=false"></button>
+        <button pButton pRipple type="button" label="Venda" class="p-button-raised p-button-success"></button>
+        <p-button icon="pi pi-times" (click)="abrirModalData()" label="Salvar"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Confirmar Alteração Data" [(visible)]="displayModalData" [modal]="true" [style]="{width: '20vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Alterar para a nova data ou manter a data de
+                compra atual?</label>
+            <p-selectButton [options]="options" [(ngModel)]="selectedData" optionLabel="label" optionValue="value">
+            </p-selectButton>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModalData=false"></button>
+        <p-button icon="pi pi-times" (click)="editarAcao(selectedAcao)" label="Salvar"></p-button>
+    </ng-template>
+
+</p-dialog>
