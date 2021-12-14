@@ -1,5 +1,8 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Acao } from 'src/app/_model/acao.model';
+import { AcaoService } from '../acao/_service/acao.service';
 
 @Component({
   selector: 'app-dash',
@@ -8,13 +11,24 @@ import { Subscription } from 'rxjs';
 })
 export class DashComponent implements OnInit {
 
-  basicData: any;
+  acoes: Acao[] = [];
+  valorTotalInvestido: string = "";
+  quantidade: number = 0;
 
+  basicData: any;
   basicOptions: any;
 
-  constructor() { }
+  constructor(
+    private _acaoService: AcaoService,
+    private currency: CurrencyPipe
+  ) { }
 
   ngOnInit(): void {
+    this.totalInvestido();
+    this.updateChartOptions();
+  }
+
+  updateChartOptions() {
     this.basicData = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
       datasets: [
@@ -31,11 +45,6 @@ export class DashComponent implements OnInit {
       ]
     };
 
-    this.updateChartOptions();
-
-  }
-
-  updateChartOptions() {
     this.applyLightTheme();
   }
 
@@ -68,6 +77,30 @@ export class DashComponent implements OnInit {
       }
     };
 
+  }
+
+  totalInvestido(): void {
+    let valorTotalInvestido: number = 0;
+
+    let subscription = this._acaoService.consultarAcoesAtivos().subscribe(data => {
+      subscription.unsubscribe();
+      if (data.length >= 1) {
+        this.acoes = data;
+        this.quantidadeTotal(this.acoes);
+        this.acoes.forEach(a => {
+          valorTotalInvestido = valorTotalInvestido + a.valorBrutoPago;
+        });
+        this.valorTotalInvestido += this.currency.transform(valorTotalInvestido, 'BRL');
+      }
+    });
+  }
+
+  quantidadeTotal(acao: Acao[]) {
+    let quantidadeTotal: number = 0;
+    acao.forEach(a => {
+      quantidadeTotal = quantidadeTotal + a.quantidade;
+    });
+    this.quantidade = quantidadeTotal;
   }
 
 }

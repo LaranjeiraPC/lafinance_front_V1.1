@@ -1,0 +1,113 @@
+<p-messages></p-messages> 
+
+<div class="p-grid p-fluid">
+    <app-title [title]="'Ativo'"></app-title>
+
+    <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
+        <button pButton pRipple type="button" autofocus label="Adicionar" class="p-button-raised"
+            (click)="abrirModalCadastrarAtivo()"></button>
+    </span>
+
+    <div class="table">
+        <div class="p-title-table">Lista Ativos</div>
+        <p-table [value]="ativo" [lazy]="true" (onLazyLoad)="loadCustomers()" responsiveLayout="scroll"
+            [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading"
+            [globalFilterFields]="['ativo']">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="nome">Nome <p-sortIcon field="nome"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="status">Status<p-sortIcon field="status"></p-sortIcon>
+                    </th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter type="text" field="'ID'"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="'Nome'"></p-columnFilter>
+                    </th>
+                    <th>
+                        <p-columnFilter type="text" field="'Status'"></p-columnFilter>
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ativo>
+                <tr>
+                    <td>{{ativo.id}}</td>
+                    <td>{{ativo.nome}}</td>
+                    <td>{{ativo.status}}</td>
+                    <td>
+                        <button type="button" pButton pRipple icon="pi pi-microsoft"
+                            (click)="selectAtivo(ativo)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog header="Editar Ativo" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Nome do Ativo</label>
+            <input id="float-input" [ngStyle]="{'height': '40px'}" type="text" pInputTextNome
+                [(ngModel)]="selectedAtivo.nome">
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Status</label>
+            <p-selectButton [options]="options" [(ngModel)]="selectedAtivo.status" optionLabel="label"
+                optionValue="value"></p-selectButton>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Excluir" class="p-button-raised p-button-danger"
+            (click)="excluirAtivo(selectedAtivo)"></button>
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModal=false"></button>
+        <p-button icon="pi pi-times" (click)="editarAtivo(selectedAtivo)" label="Salvar"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Excluir Ativo" [(visible)]="displayModalExcluir" [modal]="true" [style]="{width: '50vw'}"
+    [baseZIndex]="10001" [draggable]="false" [resizable]="false">
+
+    Atenção, operação irreversível! Deseja realmente excluir o ativo: {{selectedAtivo.nome}}? <br />
+    Somente possível excluir caso o ativo não estej associado a nenhuma ação!
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Excluir" class="p-button-raised p-button-danger"
+            (click)="excluirAtivo(selectedAtivo)"></button>
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModalExcluir=false"></button>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog header="Cadastrar Ativo" [(visible)]="displayModalCadastrar" [modal]="true" [style]="{width: '25vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Nome do Ativo</label>
+            <input id="float-input" [ngStyle]="{'height': '40px'}" type="text" pInputTextCadastrarNome
+                [(ngModel)]="selectedNewAtivo.nome">
+        </div>
+    </div>
+
+    Ativo será cadastrado com o status igual a SIM.
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModalCadastrar=false"></button>
+        <p-button icon="pi pi-times" (click)="cadastrarAtivo(selectedNewAtivo)" label="Salvar"></p-button>
+    </ng-template>
+</p-dialog>

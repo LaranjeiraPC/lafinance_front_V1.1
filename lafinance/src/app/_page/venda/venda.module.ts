@@ -2,10 +2,7 @@ import { CommonModule, CurrencyPipe, DatePipe, registerLocaleData } from "@angul
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { AcaoComponent } from "./acao.component";
-import { AcaoRoutingModule } from "./acao.routing.module";
 import { ButtonModule } from 'primeng/button';
-import { InsertAcaoComponent } from "./insert/insert-acao.component";
 import { TitleModule } from "src/app/_common/title/title.module";
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
@@ -19,16 +16,19 @@ import { DialogModule } from "primeng/dialog";
 import localePT from '@angular/common/locales/pt';
 import { SelectButtonModule } from "primeng/selectbutton";
 import {DropdownModule} from 'primeng/dropdown';
+import { VendaComponent } from "./venda.component";
+import { InsertVendaComponent } from "./insert/insert-venda/insert-venda.component";
+import { VendaRoutingModule } from "./venda.routing.module";
 
 registerLocaleData(localePT);
 
 @NgModule({
     declarations: [
-        AcaoComponent,
-        InsertAcaoComponent
+        VendaComponent,
+        InsertVendaComponent
     ],
     imports: [
-        AcaoRoutingModule,
+        VendaRoutingModule,
         RouterModule,
         CommonModule,
         HttpClientModule,
@@ -52,4 +52,4 @@ registerLocaleData(localePT);
         DatePipe
     ]
 })
-export class AcaoModule { } 
+export class VendaModule { } 

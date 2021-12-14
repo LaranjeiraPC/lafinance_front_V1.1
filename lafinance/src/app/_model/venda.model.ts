@@ -1,30 +1,28 @@
 import { Ativo } from "./ativo.model";
-import { LucroPrejuizo } from "./lucroPrejuizo.model";
+import { CompraVenda } from "./compraVenda.model";
 
-export class Acao {
+export class Venda {
 
     id;
     ativo;
     quantidade;
-    valorBrutoPago;
-    valorAtivoPago;
-    dataCompra;
+    valorBrutoVenda;
+    valorAtivoVenda;
+    dataVenda;
     mesCriacao;
     mesAtualizacao;
-    lucroPrejuizo;
-    status;
+    compraVendaDTO;
 
     constructor() {
         this.id = 0;
         this.ativo = new Ativo();
         this.quantidade = 0;
-        this.valorBrutoPago = 0;
-        this.valorAtivoPago = 0;
-        this.dataCompra = new Date();
+        this.valorBrutoVenda = 0;
+        this.valorAtivoVenda = 0;
+        this.dataVenda = new Date();
         this.mesCriacao = new Date();
         this.mesAtualizacao = new Date();
-        this.lucroPrejuizo = new LucroPrejuizo();
-        this.status = "S";
+        this.compraVendaDTO = new CompraVenda();
     }
 
     get _id() {
@@ -51,28 +49,28 @@ export class Acao {
         this._quantidade = quantidade
     }
 
-    get _valorBrutoPago() {
-        return this.valorBrutoPago
+    get _valorBrutoVenda() {
+        return this.valorBrutoVenda
     }
 
-    set _valorBrutoPago(valorBrutoPago) {
-        this._valorBrutoPago = valorBrutoPago
+    set _valorBrutoVenda(valorBrutoVenda) {
+        this._valorBrutoVenda = valorBrutoVenda
     }
 
-    get _valorAtivoPago() {
-        return this.valorAtivoPago
+    get _valorAtivoVenda() {
+        return this.valorAtivoVenda
     }
 
-    set _valorAtivoPago(valorAtivoPago) {
-        this._valorAtivoPago = valorAtivoPago
+    set _valorAtivoVenda(valorAtivoVenda) {
+        this._valorAtivoVenda = valorAtivoVenda
     }
 
-    get _dataCompra() {
-        return this.dataCompra
+    get _dataVenda() {
+        return this.dataVenda
     }
 
-    set _dataCompra(dataCompra) {
-        this._dataCompra = dataCompra
+    set _dataVenda(dataVenda) {
+        this._dataVenda = dataVenda
     }
 
     get _mesCriacao() {
@@ -91,12 +89,12 @@ export class Acao {
         this._mesAtualizacao = mesAtualizacao
     }
 
-    get _lucroPrejuizo() {
-        return this.lucroPrejuizo
+    get _compraVendaDTO() {
+        return this.compraVendaDTO
     }
 
-    set _lucroPrejuizo(lucroPrejuizo) {
-        this._lucroPrejuizo = lucroPrejuizo
+    set _compraVendaDTO(compraVendaDTO) {
+        this._compraVendaDTO = compraVendaDTO
     }
 
 }

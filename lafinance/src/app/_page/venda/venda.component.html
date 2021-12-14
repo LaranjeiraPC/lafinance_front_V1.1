@@ -1,0 +1,59 @@
+<p-messages class="message"></p-messages>
+
+<div class="p-grid p-fluid">
+    <app-title [title]="'Venda'"></app-title>
+
+    <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
+        <button pButton pRipple type="button" label="Adicionar" class="p-button-raised"
+            routerLink="/venda/insert"></button>
+    </span>
+
+    <div class="table">
+        <div class="p-title-table">Vendas no mês: </div>
+        <p-table [value]="vendas" responsiveLayout="scroll" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
+            [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="ativo.nome">Ativo <p-sortIcon field="ativo.nome"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="valorAtivoVenda">Preço Venda<p-sortIcon field="valorAtivoVenda"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="valorBrutoVenda">Total Bruto Venda <p-sortIcon field="valorBrutoVenda">
+                        </p-sortIcon>
+                    </th>
+                    <th pSortableColumn="quantidade">Quantidade <p-sortIcon field="quantidade"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="dataVenda">Mês Venda <p-sortIcon field="dataVenda"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="lucroBrutoTotal">Lucro Bruto Total <p-sortIcon field="lucroBrutoTotal"></p-sortIcon></th>
+                    <th >Expandir </th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter type="text" field="ativo.nome"></p-columnFilter>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-venda>
+                <tr>
+                    <td>{{venda.ativo.nome}}</td>
+                    <td>{{venda.valorAtivoVenda | currency:'BRL':true}}</td>
+                    <td>{{venda.valorBrutoVenda | currency:'BRL':true}}</td>
+                    <td>{{venda.quantidade}}</td>
+                    <td>{{venda.dataVenda | date: 'dd/MM/yyyy'}}</td>
+                    <td></td>
+                    <td>
+                        <button type="button" pButton pRipple icon="pi pi-microsoft"
+                            (click)="selectVenda(venda)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
