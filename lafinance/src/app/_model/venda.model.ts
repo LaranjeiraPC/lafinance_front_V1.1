@@ -12,6 +12,7 @@ export class Venda {
     mesCriacao;
     mesAtualizacao;
     compraVendaDTO;
+    lucroBrutoTotal;
 
     constructor() {
         this.id = 0;
@@ -23,6 +24,7 @@ export class Venda {
         this.mesCriacao = new Date();
         this.mesAtualizacao = new Date();
         this.compraVendaDTO = new CompraVenda();
+        this.lucroBrutoTotal = 0
     }
 
     get _id() {
@@ -95,6 +97,14 @@ export class Venda {
 
     set _compraVendaDTO(compraVendaDTO) {
         this._compraVendaDTO = compraVendaDTO
+    }
+
+    get _lucroBrutoTotal() {
+        return this.lucroBrutoTotal
+    }
+
+    set _lucroBrutoTotal(lucroBrutoTotal) {
+        this._lucroBrutoTotal = lucroBrutoTotal
     }
 
 }
