@@ -9,7 +9,7 @@
     </span>
 
     <div class="table">
-        <div class="p-title-table">Vendas no mês: </div>
+        <div class="p-title-table">Vendas no mês: {{nomeMes}}</div>
         <p-table [value]="vendas" responsiveLayout="scroll" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
             [loading]="loading">
             <ng-template pTemplate="header">
@@ -47,7 +47,7 @@
                     <td>{{venda.valorBrutoVenda | currency:'BRL':true}}</td>
                     <td>{{venda.quantidade}}</td>
                     <td>{{venda.dataVenda | date: 'dd/MM/yyyy'}}</td>
-                    <td></td>
+                    <td>{{venda.lucroBrutoTotal | currency:'BRL':true}}</td>
                     <td>
                         <button type="button" pButton pRipple icon="pi pi-microsoft"
                             (click)="selectVenda(venda)"></button>
@@ -57,3 +57,71 @@
         </p-table>
     </div>
 </div>
+
+<p-dialog header="Editar Venda" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false" [contentStyle]="{'overflow': 'visible'}">
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Preço Venda</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedVenda.valorAtivoVenda"
+                inputId="pInputValorAtivoVenda" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Total Bruto Venda</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedVenda.valorBrutoVenda"
+                inputId="pInputValorBrutoVenda" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Quantidade</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedVenda.quantidade" mode="decimal"
+                inputId="pInputQuantidade" [useGrouping]="false">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Nova Data Venda</label>
+            <p-calendar [(ngModel)]="dataVenda" [ngStyle]="{'height': '40px'}" [showIcon]="true" inputId="icon"
+                dateFormat="dd/mm/yy">
+            </p-calendar>
+        </div>
+
+        <div [ngStyle]="{'padding': '1%', 'width': '100%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Última Data Venda</label>
+            {{selectedVenda.dataVenda | date:'dd/MM/yyyy'}}
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Excluir" class="p-button-raised p-button-danger"
+            (click)="excluirVenda(selectedVenda)"></button>
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModal=false"></button>
+        <!-- <button pButton pRipple type="button" label="Venda" class="p-button-raised p-button-success"></button> -->
+        <p-button icon="pi pi-times" (click)="abrirModalData()" label="Salvar"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Confirmar Alteração Data" [(visible)]="displayModalData" [modal]="true" [style]="{width: '20vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Alterar para a nova data ou manter a data de
+                venda atual?</label>
+            <p-selectButton [options]="options" [(ngModel)]="selectedData" optionLabel="label" optionValue="value">
+            </p-selectButton>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModalData=false"></button>
+        <p-button icon="pi pi-times" (click)="editarVenda(selectedVenda)" label="Salvar"></p-button>
+    </ng-template>
+
+</p-dialog>
