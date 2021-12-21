@@ -50,6 +50,7 @@ export class AcaoComponent implements OnInit {
   }
 
   consultarAcoes(): void {
+    this.acoes = [];
     let subscription = this._acaoService.consultarAcoesAtivos().subscribe(data => {
       subscription.unsubscribe();
       if (data.length >= 1) {
