@@ -30,4 +30,12 @@ export class AcaoService {
         return this.http.delete<Response>(this.URL + "/excluir/" + id);
     }
 
+    consultarAcoesAtivosVenda(nome: string): Observable<Acao[]> {
+        return this.http.get<Acao[]>(this.URL + "/consulta/acoes/venda/" + nome);
+    }
+
+    inativarAcoes(acao: Acao[]): Observable<Response> {
+        return this.http.post<Response>(this.URL + "/inativar/", acao);
+    }
+
 }
