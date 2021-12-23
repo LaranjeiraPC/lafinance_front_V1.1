@@ -14,6 +14,10 @@ export class VendaService {
 
     constructor(private http: HttpClient) { }
 
+    salvarVenda(venda: Venda): Observable<Response> {
+        return this.http.post<Response>(this.URL + "/venda/", venda);
+    }
+
     consultarVendas(ano: string, mes: string): Observable<Venda[]> {
         return this.http.get<Venda[]>(this.URL + "/consulta/ano/mes/" + ano + "/" + mes);
     }

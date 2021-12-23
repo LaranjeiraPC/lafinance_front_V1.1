@@ -6,6 +6,7 @@ export class Response {
 
     private _mensagem;
     private _tipo;
+    private _dtos: any[] = [];
 
     constructor() {
         this._mensagem = "";
@@ -26,6 +27,14 @@ export class Response {
 
     set tipo(tipo) {
         this._tipo = tipo
+    }
+
+    get dtos() {
+        return this._dtos
+    }
+
+    set dtos(dtos) {
+        this._dtos = dtos
     }
 
 }

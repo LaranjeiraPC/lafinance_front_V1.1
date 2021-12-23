@@ -17,15 +17,13 @@ import localePT from '@angular/common/locales/pt';
 import { SelectButtonModule } from "primeng/selectbutton";
 import {DropdownModule} from 'primeng/dropdown';
 import { VendaComponent } from "./venda.component";
-import { InsertVendaComponent } from "./insert/insert-venda/insert-venda.component";
 import { VendaRoutingModule } from "./venda.routing.module";
 
 registerLocaleData(localePT);
 
 @NgModule({
     declarations: [
-        VendaComponent,
-        InsertVendaComponent
+        VendaComponent
     ],
     imports: [
         VendaRoutingModule,

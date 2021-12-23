@@ -4,13 +4,13 @@ import { Venda } from "./venda.model";
 export class CompraVenda {
 
     id;
-    acao;
-    venda;
+    compra: any;
+    venda: any;
 
     constructor() {
         this.id = 0;
-        this.acao = 0;
-        this.venda = 0;
+        this.compra;
+        this.venda;
     }
 
     get _id() {
@@ -21,12 +21,12 @@ export class CompraVenda {
         this._id = id
     }
 
-    get _acao() {
-        return this.acao
+    get _compra() {
+        return this.compra
     }
 
-    set _acao(acao) {
-        this._acao = acao
+    set _compra(compra) {
+        this._compra = compra
     }
 
     get _venda() {
