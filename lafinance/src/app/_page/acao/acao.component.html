@@ -16,31 +16,20 @@
                 <tr>
                     <th pSortableColumn="ativo.nome">Ativo <p-sortIcon field="ativo.nome"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="valorAtivoPago">Preço Pago<p-sortIcon field="valorAtivoPago"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="valorBrutoPago">Total Bruto Pago <p-sortIcon field="valorBrutoPago">
-                        </p-sortIcon>
-                    </th>
-                    <th pSortableColumn="quantidade">Quantidade <p-sortIcon field="quantidade"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="dataCompra">Mês Compra <p-sortIcon field="dataCompra"></p-sortIcon>
-                    </th>
-                    <th></th>
-                    <th></th>
+                    <th>Preço Pago</th>
+                    <th>Total Bruto Pago</th>
+                    <th>Quantidade</th>
+                    <th>Mês Compra</th>
+                    <th>Detalhes</th>
+                    <th>Venda</th>
                 </tr>
                 <tr>
                     <th>
                         <p-columnFilter type="text" field="ativo.nome"></p-columnFilter>
                     </th>
-                    <th>
-                        <p-columnFilter type="text" field="valorAtivoPago"></p-columnFilter>
-                    </th>
-                    <th>
-                        <p-columnFilter type="text" field="valorBrutoPago"></p-columnFilter>
-                    </th>
-                    <th>
-                        <p-columnFilter type="text" field="quantidade"></p-columnFilter>
-                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -56,6 +45,10 @@
                     <td>
                         <button type="button" pButton pRipple icon="pi pi-microsoft"
                             (click)="selectAcao(acao)"></button>
+                    </td>
+                    <td>
+                        <button type="button" pButton pRipple icon="pi pi-shopping-cart"
+                            (click)="selectVenda(acao)"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -106,7 +99,6 @@
             (click)="excluirAcao(selectedAcao)"></button>
         <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
             (click)="displayModal=false"></button>
-        <button pButton pRipple type="button" label="Venda" class="p-button-raised p-button-success"></button>
         <p-button icon="pi pi-times" (click)="abrirModalData()" label="Salvar"></p-button>
     </ng-template>
 </p-dialog>
@@ -129,4 +121,88 @@
         <p-button icon="pi pi-times" (click)="editarAcao(selectedAcao)" label="Salvar"></p-button>
     </ng-template>
 
+</p-dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p-dialog header="Nova Venda" [(visible)]="displayModalNew" [modal]="true" [style]="{width: '50vw'}"
+    [baseZIndex]="10000" [draggable]="false" [resizable]="false" [contentStyle]="{'overflow': 'visible'}">
+
+    <div class="col-g10" [ngStyle]="{'padding-top': '0.5%', 'width': '100%', 'float': 'left' }">
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Ativo:</label>
+            <input type="text" disabled [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedAcaoToVenda.ativo.nome">
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Preço Venda:</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedNewVenda.valorAtivoVenda"
+                inputId="pInputValorAtivoVenda" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Total Bruto Venda</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedNewVenda.valorBrutoVenda"
+                inputId="pInputValorBrutoVenda" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Quantidade</label>
+            <p-inputNumber [ngStyle]="{'height': '40px'}" [(ngModel)]="selectedNewVenda.quantidade" mode="decimal"
+                inputId="pInputQuantidade" [useGrouping]="false">
+            </p-inputNumber>
+        </div>
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="float-input" [ngStyle]="{'padding-right': '1%'}">Data Venda</label>
+            <p-calendar [(ngModel)]="selectedNewVenda.dataVenda" [ngStyle]="{'height': '40px'}" [showIcon]="true"
+                inputId="icon" dateFormat="dd/mm/yy">
+            </p-calendar>
+        </div>
+
+    </div>
+
+    <div class="table">
+        <div class="p-title-table">Ação selecionado para venda</div>
+        <p-table [value]="acaoVenda" [(selection)]="selectedAcaoToVenda" responsiveLayout="scroll" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
+            [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Ativo</th>
+                    <th>Preço Pago</th>
+                    <th>Total Bruto Pago</th>
+                    <th>Quantidade</th>
+                    <th>Mês Compra</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-acao>
+                <tr>
+                    <td>{{acao.ativo.nome}}</td>
+                    <td>{{acao.valorAtivoPago | currency:'BRL':true}}</td>
+                    <td>{{acao.valorBrutoPago | currency:'BRL':true}}</td>
+                    <td>{{acao.quantidade}}</td>
+                    <td>{{acao.dataCompra | date: 'dd/MM/yyyy'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-secondary"
+            (click)="displayModalNew=false"></button>
+        <p-button icon="pi pi-times" (click)="salvarVenda(selectedNewVenda)" label="Salvar"></p-button>
+    </ng-template>
 </p-dialog>
