@@ -2,9 +2,13 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
+import { CompraVenda } from 'src/app/_model/compraVenda.model';
+import { Venda } from 'src/app/_model/venda.model';
 import { Response, TipoResponse } from 'src/app/_response/response';
+import { VendaService } from '../venda/_service/venda.service';
+import { CompraVendaService } from '../_service/compraVenda.service';
 import { AcaoService } from './_service/acao.service';
- 
+
 @Component({
   selector: 'app-acao',
   templateUrl: './acao.component.html',
@@ -13,23 +17,31 @@ import { AcaoService } from './_service/acao.service';
 export class AcaoComponent implements OnInit {
 
   acoes: Acao[] = [];
+  acaoVenda: Acao[] = [];
+  selectedVenda: Venda = new Venda();
+  selectedNewVenda: Venda = new Venda();
+  selectedAcaoToVenda: Acao = new Acao();
   selectedAcao: Acao = new Acao();
   selectedData: String = "N"
   dataCompra: Date = new Date();
   options: any[] = [];
+  dataVenda: Date = new Date();
 
   totalRecords: number = 0;
   cols: any[] = [];
   loading: boolean = false;
 
   displayModal: boolean = false;
+  displayModalNew: boolean = false;
   displayModalData: boolean = false;
   displayModalExcluir: boolean = false;
   displayModalCadastrar: boolean = false;
 
   constructor(
     private _acaoService: AcaoService,
+    private _vendaService: VendaService,
     private _messageService: MessageService,
+    private _compraVendaService: CompraVendaService,
     private _currency: CurrencyPipe
   ) {
     this.options = [
@@ -77,7 +89,7 @@ export class AcaoComponent implements OnInit {
   selectAcao(acao: Acao): void {
     this.selectedAcao = acao;
     this.dataCompra = new Date();
-    this.displayModal = true;    
+    this.displayModal = true;
     this.selectedData = "N";
   }
 
@@ -97,8 +109,21 @@ export class AcaoComponent implements OnInit {
     }
   }
 
-  abrirModalData(){
+  abrirModalData() {
     this.displayModalData = true;
+  }
+
+  selectVenda(acao: Acao): void {
+    this.selectedAcaoToVenda = acao;
+
+    this.acaoVenda = [];
+    this.acaoVenda.push(acao);
+
+    this.dataVenda = new Date();
+    this.selectedData = "S";
+
+    this.selectedNewVenda = new Venda();
+    this.displayModalNew = true;
   }
 
   editarAcao(acao: Acao) {
@@ -120,7 +145,50 @@ export class AcaoComponent implements OnInit {
         this.loading = false;
       }
     });
-    
+
+  }
+
+  salvarVenda(venda: Venda): void {
+    this.loading = true;
+
+    venda.ativo = this.selectedAcaoToVenda.ativo;
+
+    let subscription = this._vendaService.salvarVenda(venda).subscribe(dataVenda => {
+      subscription.unsubscribe();
+      if (dataVenda != null) {
+
+        let acao: Acao[] = [];
+        acao.push(this.selectedAcaoToVenda);
+
+        let subscriptionAcao = this._acaoService.inativarAcoes(acao).subscribe(dataCompra => {
+          subscriptionAcao.unsubscribe();
+          let ids = dataCompra.dtos;
+          let compraVenda = this.gerarCompraVenda(ids, dataVenda.dtos[0]);
+          let subscriptionCompraVenda = this._compraVendaService.salvarCompraVenda(compraVenda).subscribe(() => subscriptionCompraVenda.unsubscribe());
+        });
+
+        this.showViaService(dataVenda, "success");
+      } else {
+        this.showViaService(dataVenda, "error");
+      }
+    });
+
+    this.loadCustomers();
+    this.displayModalNew = false;
+
+    this.loading = false;
+  }
+
+  gerarCompraVenda(ids: Acao[], id: Venda): CompraVenda[] {
+    let compraVendaList: CompraVenda[] = [];
+    let compraVenda: CompraVenda = new CompraVenda();
+
+    ids.forEach(a => {
+      compraVenda.venda = id;
+      compraVenda.compra = a;
+      compraVendaList.push(compraVenda);
+    });
+    return compraVendaList;
   }
 
   showViaService(response: Response, tipo: string) {
