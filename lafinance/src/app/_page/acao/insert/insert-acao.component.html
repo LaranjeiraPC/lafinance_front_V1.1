@@ -38,6 +38,13 @@
             <p-inputNumber [(ngModel)]="acao.valorBrutoPago" inputId="pInputValorBrutoPagoText" mode="decimal"
                 [minFractionDigits]="2" [maxFractionDigits]="5">
             </p-inputNumber>
+        </div> 
+
+        <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">
+            <label for="minmaxfraction">Preço Alvo</label>
+            <p-inputNumber [(ngModel)]="acao.precoAlvo" inputId="pInputPrecoAlvoText" mode="decimal"
+                [minFractionDigits]="2" [maxFractionDigits]="5">
+            </p-inputNumber>
         </div>
 
         <div class="p-field p-md-4" [ngStyle]="{'padding': '1%', 'float': 'left'}">

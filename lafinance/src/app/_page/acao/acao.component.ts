@@ -1,9 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
 import { CompraVenda } from 'src/app/_model/compraVenda.model';
 import { Venda } from 'src/app/_model/venda.model';
+import { AlphaVantageService } from 'src/app/_pipe/_service/alphavantage.service';
 import { Response, TipoResponse } from 'src/app/_response/response';
 import { VendaService } from '../venda/_service/venda.service';
 import { CompraVendaService } from '../_service/compraVenda.service';
@@ -12,11 +13,14 @@ import { AcaoService } from './_service/acao.service';
 @Component({
   selector: 'app-acao',
   templateUrl: './acao.component.html',
-  styleUrls: ['./acao.component.scss']
+  styleUrls: ['./acao.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AcaoComponent implements OnInit {
 
   acoes: Acao[] = [];
+  acoesOutros: Acao[] = [];
+  acoesCalculado: Acao[] = [];
   acaoVenda: Acao[] = [];
   selectedVenda: Venda = new Venda();
   selectedNewVenda: Venda = new Venda();
@@ -26,6 +30,7 @@ export class AcaoComponent implements OnInit {
   dataCompra: Date = new Date();
   options: any[] = [];
   dataVenda: Date = new Date();
+  precoAtual: number = 0;
 
   totalRecords: number = 0;
   cols: any[] = [];
@@ -36,6 +41,10 @@ export class AcaoComponent implements OnInit {
   displayModalData: boolean = false;
   displayModalExcluir: boolean = false;
   displayModalCadastrar: boolean = false;
+
+  data: Date = new Date;
+  mes: number = this.data.getMonth() + 1;
+  ano: number = this.data.getFullYear();
 
   constructor(
     private _acaoService: AcaoService,
@@ -52,22 +61,40 @@ export class AcaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.loadCustomers();
+
+    
+    this.loadCustomers(this.mes, this.ano);
   }
 
-  loadCustomers() {
+  loadCustomers(mes: number, ano: number) {
     setTimeout(() => {
-      this.consultarAcoes();
+      this.consultarAcoes(mes, ano);
+      this.consultarAcoesOutrosMeses(mes, ano);
     }, 1000);
   }
 
-  consultarAcoes(): void {
+  consultarAcoes(mes: number, ano: number): void {
     this.acoes = [];
-    let subscription = this._acaoService.consultarAcoesAtivos().subscribe(data => {
+    let subscription = this._acaoService.consultarAcoesAtivosMesAtual(mes, ano).subscribe(data => {
       subscription.unsubscribe();
       if (data.length >= 1) {
         this.loading = false;
         this.acoes = data;
+        console.log(this.acoes)
+        this.totalInvestido();
+      } else {
+        this.loading = false;
+      }
+    });
+  }
+
+  consultarAcoesOutrosMeses(mes: number, ano: number): void {
+    this.acoesOutros = [];
+    let subscription = this._acaoService.consultarAcoesAtivosOutrosMeses(mes, ano).subscribe(data => {
+      subscription.unsubscribe();
+      if (data.length >= 1) {
+        this.loading = false;
+        this.acoesOutros = data;
         this.totalInvestido();
       } else {
         this.loading = false;
@@ -99,12 +126,12 @@ export class AcaoComponent implements OnInit {
         subscription.unsubscribe();
         this.displayModalExcluir = false;
         this.displayModal = false;
-        if (data.tipo == TipoResponse.SUCESSO) {
-          this.showViaService(data, "success");
-        } else {
-          this.showViaService(data, "error");
-        }
-        this.loadCustomers();
+        
+        var response = new Response();
+        response.mensagem = "Registro exclído com sucesso";
+        response.tipo = TipoResponse.SUCESSO
+        this.showViaService(response, "success");
+        this.loadCustomers(this.mes, this.ano);
       });
     }
   }
@@ -137,7 +164,7 @@ export class AcaoComponent implements OnInit {
         this.displayModal = false;
         this.displayModalData = false;
         this.showViaService(data, "success");
-        this.loadCustomers();
+        this.loadCustomers(this.mes, this.ano);
       } else {
         this.displayModalData = true;
         this.displayModal = false;
@@ -173,7 +200,7 @@ export class AcaoComponent implements OnInit {
       }
     });
 
-    this.loadCustomers();
+    this.loadCustomers(this.mes, this.ano);
     this.displayModalNew = false;
 
     this.loading = false;

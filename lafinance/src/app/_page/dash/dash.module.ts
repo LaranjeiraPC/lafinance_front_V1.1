@@ -7,6 +7,8 @@ import { DashRoutingModule } from "./dash.routing.module";
 import {CardModule} from 'primeng/card';
 import {TabMenuModule} from 'primeng/tabmenu';
 import {ChartModule} from 'primeng/chart';
+import { MessageService } from "primeng/api";
+import { MessagesModule } from "primeng/messages";
 
 @NgModule({
     declarations: [
@@ -19,8 +21,12 @@ import {ChartModule} from 'primeng/chart';
         HttpClientModule,
         TabMenuModule,
         CardModule,
-        ChartModule
+        ChartModule,
+        MessagesModule,
     ],
     exports: [],
+    providers: [
+        MessageService,
+    ]
 })
 export class DashModule { } 

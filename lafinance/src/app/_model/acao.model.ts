@@ -13,6 +13,8 @@ export class Acao {
     mesAtualizacao;
     lucroPrejuizo;
     status;
+    precoAlvo;
+    precoHoje;
 
     constructor() {
         this.id = 0;
@@ -25,6 +27,8 @@ export class Acao {
         this.mesAtualizacao = new Date();
         this.lucroPrejuizo = new LucroPrejuizo();
         this.status = "S";
+        this.precoHoje = 0;
+        this.precoAlvo = 0;
     }
 
     get _id() {
@@ -97,6 +101,22 @@ export class Acao {
 
     set _lucroPrejuizo(lucroPrejuizo) {
         this._lucroPrejuizo = lucroPrejuizo
+    }
+
+    get _precoAlvo() {
+        return this.precoAlvo
+    }
+
+    set _precoAlvo(precoAlvo) {
+        this._precoAlvo = precoAlvo
+    }
+
+    get _precoHoje() {
+        return this.precoHoje
+    }
+
+    set _precoHoje(precoHoje) {
+        this._precoHoje = precoHoje 
     }
 
 }

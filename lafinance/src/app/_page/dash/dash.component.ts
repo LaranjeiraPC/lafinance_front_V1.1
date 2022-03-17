@@ -1,7 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
+import { Response, TipoResponse } from 'src/app/_response/response';
 import { AcaoService } from '../acao/_service/acao.service';
 
 @Component({
@@ -20,12 +21,14 @@ export class DashComponent implements OnInit {
 
   constructor(
     private _acaoService: AcaoService,
-    private currency: CurrencyPipe
+    private currency: CurrencyPipe,
+    private _messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
     this.totalInvestido();
     this.updateChartOptions();
+    this.atualizarRegistroAtivos();
   }
 
   updateChartOptions() {
@@ -91,16 +94,36 @@ export class DashComponent implements OnInit {
           valorTotalInvestido = valorTotalInvestido + a.valorBrutoPago;
         });
         this.valorTotalInvestido += this.currency.transform(valorTotalInvestido, 'BRL');
+      }else{
+        this.valorTotalInvestido = "R$0,00";
       }
     });
   }
 
-  quantidadeTotal(acao: Acao[]) {
+  quantidadeTotal(acao: Acao[]): void {
     let quantidadeTotal: number = 0;
     acao.forEach(a => {
       quantidadeTotal = quantidadeTotal + a.quantidade;
     });
     this.quantidade = quantidadeTotal;
+  }
+
+  atualizarRegistroAtivos(): void {
+    let subscription = this._acaoService.atualizarRegistroAtivos().subscribe(data => {
+      subscription.unsubscribe();
+      if (data.tipo == TipoResponse.SUCESSO) {
+        this.showViaService(data, "success");
+      }else {
+        this.showViaService(data, "error");
+      }
+    });
+  }
+
+  showViaService(response: Response, tipo: string) {
+    this._messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
+    setTimeout(() => {
+      this._messageService.clear();
+    }, 3000);
   }
 
 }

@@ -14,10 +14,6 @@ export class AcaoService {
 
     constructor(private http: HttpClient) { }
 
-    consultarAcoesAtivos(): Observable<Acao[]> {
-        return this.http.get<Acao[]>(this.URL + "/consulta/acoes/");
-    }
-
     cadastrarAcao(acao: Acao): Observable<Response> {
         return this.http.post<Response>(this.URL + "/salva/", acao);
     }
@@ -36,6 +32,18 @@ export class AcaoService {
 
     inativarAcoes(acao: Acao[]): Observable<Response> {
         return this.http.post<Response>(this.URL + "/inativar/", acao);
+    }
+
+    atualizarRegistroAtivos(): Observable<Response> {
+        return this.http.get<Response>(this.URL + "/atualizar");
+    }
+
+    consultarAcoesAtivosMesAtual(mes: number, ano: number): Observable<Acao[]> {
+        return this.http.get<Acao[]>(this.URL + "/consulta/acoes/atual/" + mes + "/" + ano);
+    }
+
+    consultarAcoesAtivosOutrosMeses(mes: number, ano: number): Observable<Acao[]> {
+        return this.http.get<Acao[]>(this.URL + "/consulta/acoes/outros/" + mes + "/" + ano);
     }
 
 }
