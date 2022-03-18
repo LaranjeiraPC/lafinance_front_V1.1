@@ -19,10 +19,6 @@ export class DashComponent implements OnInit {
   basicData: any;
   basicOptions: any;
 
-  data: Date = new Date;
-  mes: number = this.data.getMonth() + 1;
-  ano: number = this.data.getFullYear();
-
   constructor(
     private _acaoService: AcaoService,
     private currency: CurrencyPipe,
@@ -30,7 +26,7 @@ export class DashComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.totalInvestido(this.mes, this.ano);
+    this.totalInvestido();
     this.updateChartOptions();
     this.atualizarRegistroAtivos();
   }
@@ -86,24 +82,13 @@ export class DashComponent implements OnInit {
 
   }
 
-  totalInvestido(mes: number, ano: number): void {
+  totalInvestido(): void {
     let valorTotalInvestido: number = 0;
 
-    let subscription = this._acaoService.consultarAcoesAtivosMesAtual(mes, ano).subscribe(data => {
+    let subscription = this._acaoService.consultarcoesAll().subscribe(data => {
       subscription.unsubscribe();
       if (data.length >= 1) {
         this.acoes = data;
-      }else{
-        this.valorTotalInvestido = "R$0,00";
-      }
-    });
-
-    let subscriptionOutrosMeses = this._acaoService.consultarAcoesAtivosOutrosMeses(mes, ano).subscribe(data => {
-      subscriptionOutrosMeses.unsubscribe();
-      if (data.length >= 1) {
-        data.forEach(d =>{
-          this.acoes.push(d);
-        });
       }else{
         this.valorTotalInvestido = "R$0,00";
       }

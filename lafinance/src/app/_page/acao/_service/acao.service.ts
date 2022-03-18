@@ -42,8 +42,12 @@ export class AcaoService {
         return this.http.get<Acao[]>(this.URL + "/consulta/acoes/atual/" + mes + "/" + ano);
     }
 
-    consultarAcoesAtivosOutrosMeses(mes: number, ano: number): Observable<Acao[]> {
-        return this.http.get<Acao[]>(this.URL + "/consulta/acoes/outros/" + mes + "/" + ano);
+    consultarAcoesAtivosOutrosMeses(ids: Acao[]): Observable<Acao[]> {
+        return this.http.post<Acao[]>(this.URL + "/consulta/acoes/outros", ids);
+    }
+
+    consultarcoesAll(): Observable<Acao[]> {
+        return this.http.get<Acao[]>(this.URL + "/consulta/all");
     }
 
 }

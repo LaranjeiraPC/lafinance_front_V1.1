@@ -4,7 +4,6 @@ import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
 import { CompraVenda } from 'src/app/_model/compraVenda.model';
 import { Venda } from 'src/app/_model/venda.model';
-import { AlphaVantageService } from 'src/app/_pipe/_service/alphavantage.service';
 import { Response, TipoResponse } from 'src/app/_response/response';
 import { VendaService } from '../venda/_service/venda.service';
 import { CompraVendaService } from '../_service/compraVenda.service';
@@ -19,6 +18,7 @@ import { AcaoService } from './_service/acao.service';
 export class AcaoComponent implements OnInit {
 
   acoes: Acao[] = [];
+  acaoIds: number[] = [];
   acoesOutros: Acao[] = [];
   acoesCalculado: Acao[] = [];
   acaoVenda: Acao[] = [];
@@ -61,36 +61,35 @@ export class AcaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-
-    
     this.loadCustomers(this.mes, this.ano);
   }
 
   loadCustomers(mes: number, ano: number) {
     setTimeout(() => {
       this.consultarAcoes(mes, ano);
-      this.consultarAcoesOutrosMeses(mes, ano);
     }, 1000);
   }
 
   consultarAcoes(mes: number, ano: number): void {
     this.acoes = [];
+    this.acaoIds = [];
     let subscription = this._acaoService.consultarAcoesAtivosMesAtual(mes, ano).subscribe(data => {
       subscription.unsubscribe();
       if (data.length >= 1) {
         this.loading = false;
         this.acoes = data;
-        console.log(this.acoes)
+        this.consultarAcoesOutrosMeses();
         this.totalInvestido();
       } else {
         this.loading = false;
       }
+     
     });
   }
 
-  consultarAcoesOutrosMeses(mes: number, ano: number): void {
+  consultarAcoesOutrosMeses(): void {
     this.acoesOutros = [];
-    let subscription = this._acaoService.consultarAcoesAtivosOutrosMeses(mes, ano).subscribe(data => {
+    let subscription = this._acaoService.consultarAcoesAtivosOutrosMeses(this.acoes).subscribe(data => {
       subscription.unsubscribe();
       if (data.length >= 1) {
         this.loading = false;
