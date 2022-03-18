@@ -107,6 +107,10 @@ export class AcaoComponent implements OnInit {
     this.acoes.forEach(a => {
       valorTotalInvestido = valorTotalInvestido + a.valorBrutoPago;
     });
+
+    this.acoesOutros.forEach(a => {
+      valorTotalInvestido = valorTotalInvestido + a.valorBrutoPago;
+    });
     let valorTotalInvestidoConverte = this._currency.transform(valorTotalInvestido, 'BRL');
     if (valorTotalInvestidoConverte != null) {
       this._messageService.add({ severity: "warn", summary: "Total investido", detail: valorTotalInvestidoConverte.toString() });
