@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Ativo } from 'src/app/_model/ativo.model';
-import { Response } from 'src/app/_response/response';
 import { Config } from 'src/environments/config';
 
 @Injectable({
@@ -15,18 +14,18 @@ export class AtivoService {
     constructor(private http: HttpClient) { }
 
     consultarAtivos(): Observable<any> {
-        return this.http.get(this.URL + "/consulta/");
+        return this.http.get(this.URL + "/list");
     }
 
     editarAtivo(ativo: Ativo): Observable<Response> {
-        return this.http.post<Response>(this.URL + "/editar/", ativo);
+        return this.http.put<Response>(this.URL + "/edit", ativo);
     }
 
     cadastrarAtivo(ativo: Ativo): Observable<Response> {
-        return this.http.post<Response>(this.URL + "/salva/", ativo);
+        return this.http.post<Response>(this.URL + "/save", ativo);
     }
 
     excluirAtivo(id: number): Observable<Response> {
-        return this.http.get<Response>(this.URL + "/excluir/" + id);
+        return this.http.delete<Response>(this.URL + "/" + id);
     }
 }

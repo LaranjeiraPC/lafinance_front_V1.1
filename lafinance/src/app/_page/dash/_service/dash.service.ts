@@ -1,19 +1,20 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { Dash } from "src/app/_model/dash.model";
 import { Config } from "src/environments/config";
 
 @Injectable({
     providedIn: 'root'
 })
-export class AnaliseService {
+export class DashService {
 
-    private URL: string = Config.api.url + "api/analise";
+    private URL: string = Config.api.url + "api/dash";
 
     constructor(private http: HttpClient) { }
 
-    calcularLucroBruto(idsVenda: number): Observable<number> {
-        return this.http.get<number>(this.URL + "/calculo/" + idsVenda);
+    consultarDadosDahsboard(): Observable<Dash> {
+        return this.http.get<Dash>(this.URL + "/search");
     }
-        
+
 }

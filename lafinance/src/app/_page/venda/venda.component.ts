@@ -1,26 +1,24 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
 import { Ativo } from 'src/app/_model/ativo.model';
 import { CompraVenda } from 'src/app/_model/compraVenda.model';
 import { Venda } from 'src/app/_model/venda.model';
-import { Response, TipoResponse } from 'src/app/_response/response';
+import { TipoResponse } from 'src/app/_response/response';
 import { Util } from 'src/app/_util/util';
 import { AcaoService } from '../acao/_service/acao.service';
 import { AtivoService } from '../ativo/_service/ativo.service';
 import { CompraVendaService } from '../_service/compraVenda.service';
-import { AnaliseService } from './_service/analise.service';
 import { VendaService } from './_service/venda.service';
- 
+
 @Component({
   selector: 'app-venda',
   templateUrl: './venda.component.html',
   styleUrls: ['./venda.component.scss']
 })
 export class VendaComponent implements OnInit {
- 
+
   acoes: Acao[] = [];
   vendas: Venda[] = [];
   selectedAcao: Acao[] = []
@@ -51,12 +49,11 @@ export class VendaComponent implements OnInit {
     private _vendaService: VendaService,
     private _compraVendaService: CompraVendaService,
     private _ativoService: AtivoService,
-    private _analiseService: AnaliseService,
     private _messageService: MessageService,
     private _acaoService: AcaoService,
     private _currency: CurrencyPipe,
     private _util: Util,
-  ) { 
+  ) {
     this.options = [
       { label: "Nova Data", value: "S" },
       { label: "Data Atual", value: "N" }
@@ -77,7 +74,7 @@ export class VendaComponent implements OnInit {
       subscription.unsubscribe();
       if (data.length >= 1) {
         this.ativos = data;
-        if(this.ativos.length >= 1){
+        if (this.ativos.length >= 1) {
           this.selectedAtivo = this.ativos[0];
           this.consultarAcoes(this.selectedAtivo);
         }
@@ -120,18 +117,18 @@ export class VendaComponent implements OnInit {
     });
   }
 
-  consultarAnaliseLucroBruto(vendas: Venda[]): void{
+  consultarAnaliseLucroBruto(vendas: Venda[]): void {
     this.lucroTotalBruto = 0;
     this._messageService.clear();
 
     vendas.forEach(v => {
-      let subscription = this._analiseService.calcularLucroBruto(v.id).subscribe(data => {
+      let subscription = this._vendaService.calcularLucroBruto(v.id).subscribe(data => {
         subscription.unsubscribe();
         v.lucroBrutoTotal = data;
         this.lucroTotalBruto = this.lucroTotalBruto + v.lucroBrutoTotal;
         this.vendas.push(v);
         this._messageService.clear();
-        
+
         let lucroTotalBrutoConverte = this._currency.transform(this.lucroTotalBruto, 'BRL');
         if (lucroTotalBrutoConverte != null) {
           this._messageService.add({ severity: "warn", summary: "Lucro Bruto Total", detail: lucroTotalBrutoConverte.toString() });
@@ -143,14 +140,14 @@ export class VendaComponent implements OnInit {
   selectVenda(venda: Venda): void {
     this.selectedVenda = venda;
     this.dataVenda = new Date();
-    this.displayModal = true;    
+    this.displayModal = true;
     this.selectedData = "S";
   }
 
   selectNewVenda(): void {
     this.consultarAtivos();
     this.selectedNewVenda = new Venda();
-    this.displayModalNew = true;   
+    this.displayModalNew = true;
   }
 
   excluirVenda(venda: Venda): void {
@@ -159,12 +156,10 @@ export class VendaComponent implements OnInit {
         subscription.unsubscribe();
         this.displayModalExcluir = false;
         this.displayModal = false;
-        if (data.tipo == TipoResponse.SUCESSO) {
-          this.showViaService(data, "success");
-        } else {
-          this.showViaService(data, "error");
-        }
+        this.showViaService("success", TipoResponse.SUCESSO, "Venda excluído com sucesso");
         this.loadCustomers(this.ano, this.nomeMes);
+      }, () => {
+        this.showViaService("error", TipoResponse.ERRO, "Falha na operação");
       });
     }
   }
@@ -176,22 +171,20 @@ export class VendaComponent implements OnInit {
 
     let subscription = this._vendaService.editarVenda(venda).subscribe(data => {
       subscription.unsubscribe();
-      if (data.tipo != null && data.tipo == TipoResponse.SUCESSO) {
-        this.displayModal = false;
-        this.displayModalData = false;
-        this.showViaService(data, "success");
-        this.loadCustomers(this.ano, this.nomeMes);
-      } else {
-        this.displayModalData = true;
-        this.displayModal = false;
-        this.showViaService(data, "error");
-        this.loading = false;
-      }
+      this.displayModal = false;
+      this.displayModalData = false;
+      this.loadCustomers(this.ano, this.nomeMes);
+      this.showViaService("success", TipoResponse.SUCESSO, "Registro editado com sucesso");
+    }, () => {
+      this.showViaService("error", TipoResponse.ERRO, "Falha na operação");
+      this.displayModalData = true;
+      this.displayModal = false;
+      this.loading = false;
     });
-    
+
   }
 
-  abrirModalData(){
+  abrirModalData() {
     this.displayModalData = true;
   }
 
@@ -200,33 +193,27 @@ export class VendaComponent implements OnInit {
     if (this.selectedAtivo != null && this.selectedAcao.length >= 1) {
       this.displayModalNew = true;
       venda.ativo = this.selectedAtivo;
-      
+
       let subscription = this._vendaService.salvarVenda(venda).subscribe(dataVenda => {
         subscription.unsubscribe();
-        if (dataVenda != null) {
-          
-          let subscriptionAcao = this._acaoService.inativarAcoes(this.selectedAcao).subscribe(dataCompra => {
-            subscriptionAcao.unsubscribe();
-            let ids = dataCompra.dtos;
-            let compraVenda = this.gerarCompraVenda(ids, dataVenda.dtos[0]);
-            let subscriptionCompraVenda = this._compraVendaService.salvarCompraVenda(compraVenda).subscribe(() => subscriptionCompraVenda.unsubscribe());
-          });
-
-          this.showViaService(dataVenda, "success");
-        } else {
-          this.showViaService(dataVenda, "error");
-        }
+        let subscriptionAcao = this._acaoService.inativarAcoes(this.selectedAcao).subscribe(dataCompra => {
+          subscriptionAcao.unsubscribe();
+          let ids = dataCompra;
+          let compraVenda = this.gerarCompraVenda(ids, dataVenda);
+          let subscriptionCompraVenda = this._compraVendaService.salvarCompraVenda(compraVenda).subscribe(() => subscriptionCompraVenda.unsubscribe());
+        }, () => {
+          this.showViaService("error", TipoResponse.ERRO, "Falha ao inativar ações");
+        });
+      }, () => {
+        this.showViaService("error", TipoResponse.ERRO, "Falha ao salvar venda");
       });
 
       this.loadCustomers(this.ano, this.nomeMes);
       this.displayModalNew = false;
-    }else{
-      let aviso: Response = new Response();
-      aviso.mensagem = "Selecione uma ação!";
-      aviso.tipo = TipoResponse.ERRO;
-      this.showViaService(aviso, "error");
+    } else {
+      this.showViaService("error", TipoResponse.ERRO, "Falha na operação");
     }
-    
+
     this.loading = false;
   }
 
@@ -242,8 +229,8 @@ export class VendaComponent implements OnInit {
     return compraVendaList;
   }
 
-  showViaService(response: Response, tipo: string) {
-    this._messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
+  showViaService(tipo: string, status: string, mensagem: string) {
+    this._messageService.add({ severity: tipo, summary: status, detail: mensagem });
     setTimeout(() => {
       this._messageService.clear();
     }, 3000);

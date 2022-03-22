@@ -2,8 +2,8 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
-import { Response, TipoResponse } from 'src/app/_response/response';
 import { AcaoService } from '../acao/_service/acao.service';
+import { DashService } from './_service/dash.service';
 
 @Component({
   selector: 'app-dash',
@@ -15,12 +15,13 @@ export class DashComponent implements OnInit {
   acoes: Acao[] = [];
   valorTotalInvestido: string = "";
   quantidade: number = 0;
+  lucroBrutoTotalAno: string = "";
 
   basicData: any;
   basicOptions: any;
 
   constructor(
-    private _acaoService: AcaoService,
+    private _dashService: DashService,
     private currency: CurrencyPipe,
     private _messageService: MessageService,
   ) { }
@@ -28,7 +29,6 @@ export class DashComponent implements OnInit {
   ngOnInit(): void {
     this.totalInvestido();
     this.updateChartOptions();
-    this.atualizarRegistroAtivos();
   }
 
   updateChartOptions() {
@@ -83,49 +83,19 @@ export class DashComponent implements OnInit {
   }
 
   totalInvestido(): void {
-    let valorTotalInvestido: number = 0;
-
-    let subscription = this._acaoService.consultarcoesAll().subscribe(data => {
+    let subscription = this._dashService.consultarDadosDahsboard().subscribe(data => {
       subscription.unsubscribe();
-      if (data.length >= 1) {
-        this.acoes = data;
-      }else{
-        this.valorTotalInvestido = "R$0,00";
-      }
-
-      this.quantidadeTotal(this.acoes);
-      this.acoes.forEach(a => {
-        valorTotalInvestido = valorTotalInvestido + a.valorBrutoPago;
-      });
-      this.valorTotalInvestido += this.currency.transform(valorTotalInvestido, 'BRL');
-    });
-
-  }
-
-  quantidadeTotal(acao: Acao[]): void {
-    let quantidadeTotal: number = 0;
-    acao.forEach(a => {
-      quantidadeTotal = quantidadeTotal + a.quantidade;
-    });
-    this.quantidade = quantidadeTotal;
-  }
-
-  atualizarRegistroAtivos(): void {
-    let subscription = this._acaoService.atualizarRegistroAtivos().subscribe(data => {
-      subscription.unsubscribe();
-      if (data.tipo == TipoResponse.SUCESSO) {
-        this.showViaService(data, "success");
-      }else {
-        this.showViaService(data, "error");
-      }
+      this.quantidade = data.quantidadeTotal;
+      this.valorTotalInvestido += this.currency.transform(data.valorInvestimentoTotal, 'BRL');
+      this.lucroBrutoTotalAno += this.currency.transform(data.valorBrutoTotal, 'BRL');
     });
   }
 
-  showViaService(response: Response, tipo: string) {
-    this._messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
-    setTimeout(() => {
-      this._messageService.clear();
-    }, 3000);
-  }
+  // showViaService(response: Response, tipo: string) {
+  //   this._messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
+  //   setTimeout(() => {
+  //     this._messageService.clear();
+  //   }, 3000);
+  // }
 
 }

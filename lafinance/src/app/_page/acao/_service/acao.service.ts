@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Acao } from 'src/app/_model/acao.model';
-import { Response } from 'src/app/_response/response';
 import { Config } from 'src/environments/config';
 
 @Injectable({
@@ -14,40 +13,36 @@ export class AcaoService {
 
     constructor(private http: HttpClient) { }
 
-    cadastrarAcao(acao: Acao): Observable<Response> {
-        return this.http.post<Response>(this.URL + "/salva/", acao);
+    cadastrarAcao(acao: Acao): Observable<Acao> {
+        return this.http.post<Acao>(this.URL + "/save", acao);
     }
 
-    editarAcao(acao: Acao): Observable<Response> {
-        return this.http.post<Response>(this.URL + "/edita/", acao);
+    editarAcao(acao: Acao): Observable<any> {
+        return this.http.put(this.URL + "/edit", acao);
     }
 
-    excluirAcao(id: number): Observable<Response> {
-        return this.http.delete<Response>(this.URL + "/excluir/" + id);
+    excluirAcao(id: number): Observable<any> {
+        return this.http.delete(this.URL + "/" + id, { observe: 'response' });
     }
-
+    
     consultarAcoesAtivosVenda(nome: string): Observable<Acao[]> {
-        return this.http.get<Acao[]>(this.URL + "/consulta/acoes/venda/" + nome);
+        return this.http.get<Acao[]>(this.URL + "/search/acoes/venda/" + nome);
     }
 
-    inativarAcoes(acao: Acao[]): Observable<Response> {
-        return this.http.post<Response>(this.URL + "/inativar/", acao);
-    }
-
-    atualizarRegistroAtivos(): Observable<Response> {
-        return this.http.get<Response>(this.URL + "/atualizar");
+    inativarAcoes(acao: Acao[]): Observable<Acao[]> {
+        return this.http.post<Acao[]>(this.URL + "/disable", acao);
     }
 
     consultarAcoesAtivosMesAtual(mes: number, ano: number): Observable<Acao[]> {
-        return this.http.get<Acao[]>(this.URL + "/consulta/acoes/atual/" + mes + "/" + ano);
+        return this.http.get<Acao[]>(this.URL + "/search/acoes/atual/" + mes + "/" + ano);
     }
 
     consultarAcoesAtivosOutrosMeses(ids: Acao[]): Observable<Acao[]> {
-        return this.http.post<Acao[]>(this.URL + "/consulta/acoes/outros", ids);
+        return this.http.post<Acao[]>(this.URL + "/search/acoes/outros", ids);
     }
 
     consultarcoesAll(): Observable<Acao[]> {
-        return this.http.get<Acao[]>(this.URL + "/consulta/all");
+        return this.http.get<Acao[]>(this.URL + "/search/all");
     }
 
 }

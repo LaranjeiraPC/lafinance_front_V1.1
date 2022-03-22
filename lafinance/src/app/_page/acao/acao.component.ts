@@ -4,7 +4,7 @@ import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
 import { CompraVenda } from 'src/app/_model/compraVenda.model';
 import { Venda } from 'src/app/_model/venda.model';
-import { Response, TipoResponse } from 'src/app/_response/response';
+import { TipoResponse } from 'src/app/_response/response';
 import { VendaService } from '../venda/_service/venda.service';
 import { CompraVendaService } from '../_service/compraVenda.service';
 import { AcaoService } from './_service/acao.service';
@@ -83,7 +83,7 @@ export class AcaoComponent implements OnInit {
       } else {
         this.loading = false;
       }
-     
+
     });
   }
 
@@ -125,16 +125,16 @@ export class AcaoComponent implements OnInit {
 
   excluirAcao(acao: Acao) {
     if (acao) {
-      let subscription = this._acaoService.excluirAcao(acao.id).subscribe(data => {
+      let subscription = this._acaoService.excluirAcao(acao.id).subscribe(response => {
         subscription.unsubscribe();
-        this.displayModalExcluir = false;
-        this.displayModal = false;
-        
-        var response = new Response();
-        response.mensagem = "Registro exclído com sucesso";
-        response.tipo = TipoResponse.SUCESSO
-        this.showViaService(response, "success");
-        this.loadCustomers(this.mes, this.ano);
+        if (response.status == 204) {
+          this.displayModalExcluir = false;
+          this.displayModal = false;
+          this.showViaService("success", TipoResponse.SUCESSO, "Ativo excluído com sucesso");
+          this.loadCustomers(this.mes, this.ano);
+        }
+      }, () => {
+        this.showViaService("error", TipoResponse.ERRO, "Falha ao excluir ativo");
       });
     }
   }
@@ -163,44 +163,38 @@ export class AcaoComponent implements OnInit {
 
     let subscription = this._acaoService.editarAcao(acao).subscribe(data => {
       subscription.unsubscribe();
-      if (data.tipo != null && data.tipo == TipoResponse.SUCESSO) {
-        this.displayModal = false;
-        this.displayModalData = false;
-        this.showViaService(data, "success");
-        this.loadCustomers(this.mes, this.ano);
-      } else {
-        this.displayModalData = true;
-        this.displayModal = false;
-        this.showViaService(data, "error");
-        this.loading = false;
-      }
+      this.displayModal = false;
+      this.displayModalData = false;
+      this.showViaService("success", TipoResponse.SUCESSO, "Ativo editado com sucesso");
+      this.loadCustomers(this.mes, this.ano);
+    }, () => {
+      this.displayModalData = true;
+      this.displayModal = false;
+      this.showViaService("error", TipoResponse.ERRO, "Falha ao editar ativo");
+      this.loading = false;
     });
-
   }
 
   salvarVenda(venda: Venda): void {
     this.loading = true;
-
     venda.ativo = this.selectedAcaoToVenda.ativo;
 
     let subscription = this._vendaService.salvarVenda(venda).subscribe(dataVenda => {
       subscription.unsubscribe();
-      if (dataVenda != null) {
 
-        let acao: Acao[] = [];
-        acao.push(this.selectedAcaoToVenda);
+      let acao: Acao[] = [];
+      acao.push(this.selectedAcaoToVenda);
 
-        let subscriptionAcao = this._acaoService.inativarAcoes(acao).subscribe(dataCompra => {
-          subscriptionAcao.unsubscribe();
-          let ids = dataCompra.dtos;
-          let compraVenda = this.gerarCompraVenda(ids, dataVenda.dtos[0]);
-          let subscriptionCompraVenda = this._compraVendaService.salvarCompraVenda(compraVenda).subscribe(() => subscriptionCompraVenda.unsubscribe());
-        });
+      let subscriptionAcao = this._acaoService.inativarAcoes(acao).subscribe(dataCompra => {
+        subscriptionAcao.unsubscribe();
+        let ids = dataCompra;
+        let compraVenda = this.gerarCompraVenda(ids, dataVenda);
+        let subscriptionCompraVenda = this._compraVendaService.salvarCompraVenda(compraVenda).subscribe(() => subscriptionCompraVenda.unsubscribe());
+      });
 
-        this.showViaService(dataVenda, "success");
-      } else {
-        this.showViaService(dataVenda, "error");
-      }
+      this.showViaService("success", TipoResponse.SUCESSO, "Ativo vendido com sucesso");
+    }, () => {
+      this.showViaService("error", TipoResponse.ERRO, "Falha ao vender ativo");
     });
 
     this.loadCustomers(this.mes, this.ano);
@@ -221,8 +215,8 @@ export class AcaoComponent implements OnInit {
     return compraVendaList;
   }
 
-  showViaService(response: Response, tipo: string) {
-    this._messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
+  showViaService(tipo: string, status: string, mensagem: string) {
+    this._messageService.add({ severity: tipo, summary: status, detail: mensagem });
     setTimeout(() => {
       this._messageService.clear();
     }, 3000);

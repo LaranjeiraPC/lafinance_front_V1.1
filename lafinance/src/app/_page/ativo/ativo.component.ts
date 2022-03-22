@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Ativo } from 'src/app/_model/ativo.model';
-import { Response, TipoResponse } from 'src/app/_response/response';
 import { AtivoService } from './_service/ativo.service';
 
 @Component({
@@ -69,13 +68,13 @@ export class AtivoComponent implements OnInit {
   editarAtivo(ativo: Ativo) {
     let subscription = this._ativoService.editarAtivo(ativo).subscribe(data => {
       subscription.unsubscribe();
-      if (data.tipo != null && data.tipo == TipoResponse.SUCESSO) {
+      if (data) {
         this.displayModal = false;
-        this.showViaService(data, "success");
+       // this.showViaService(data, "success");
         this.loadCustomers();
       } else {
         this.displayModal = false;
-        this.showViaService(data, "error");
+       // this.showViaService(data, "error");
         this.loading = false;
       }
     });
@@ -89,11 +88,11 @@ export class AtivoComponent implements OnInit {
         subscription.unsubscribe();
         if (data != null) {
           this.displayModalCadastrar = false;
-          this.showViaService(data, "success");
+         // this.showViaService(data, "success");
           this.loadCustomers();
         } else {
           this.displayModalCadastrar = false;
-          this.showViaService(data, "error");
+         // this.showViaService(data, "error");
           this.loading = false;
         }
       });
@@ -106,21 +105,21 @@ export class AtivoComponent implements OnInit {
         subscription.unsubscribe();
         this.displayModalExcluir = false;
         this.displayModal = false;
-        if (data.tipo == TipoResponse.SUCESSO) {
-          this.showViaService(data, "success");
+        if (data) {
+         // this.showViaService(data, "success");
         } else {
-          this.showViaService(data, "error");
+         // this.showViaService(data, "error");
         }
         this.loadCustomers();
       });
     }
   }
 
-  showViaService(response: Response, tipo: string) {
-    this.messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
-    setTimeout(() => {
-      this.messageService.clear();
-    }, 3000);
-  }
+  // showViaService(response: Response, tipo: string) {
+  //   this.messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
+  //   setTimeout(() => {
+  //     this.messageService.clear();
+  //   }, 3000);
+  // }
 
 }

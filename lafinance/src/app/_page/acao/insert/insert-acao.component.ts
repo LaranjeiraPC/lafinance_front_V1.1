@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Acao } from 'src/app/_model/acao.model';
 import { Ativo } from 'src/app/_model/ativo.model';
-import { Response } from 'src/app/_response/response';
 import { AtivoService } from '../../ativo/_service/ativo.service';
 import { AcaoService } from '../_service/acao.service';
 
@@ -47,20 +46,20 @@ export class InsertAcaoComponent implements OnInit {
       let subscription = this._acaoService.cadastrarAcao(this.acao).subscribe(data => {
         subscription.unsubscribe();
         if (data != null) {
-          this.showViaService(data, "success");
+         // this.showViaService(data, "success");
           this._route.navigate(['/acao'])
         } else {
-          this.showViaService(data, "error");
+          //this.showViaService(data, "error");
         }
       });
     }
   }
 
-  showViaService(response: Response, tipo: string) {
-    this.messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
-    setTimeout(() => {
-      this.messageService.clear();
-    }, 3000);
-  }
+  // showViaService(response: Response, tipo: string) {
+  //   this.messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
+  //   setTimeout(() => {
+  //     this.messageService.clear();
+  //   }, 3000);
+  // }
 
 }
