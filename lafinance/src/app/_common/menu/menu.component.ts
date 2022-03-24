@@ -19,26 +19,30 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.items = [
       {
-        label: 'Home', icon: 'pi pi-fw pi-home', command: (event) => {
+        label: 'Home', icon: 'pi pi-fw pi-home', command: () => {
           this.router.navigate(['/dash'])
         }
       },
       {
-        label: 'Ação', icon: 'pi pi-fw pi-wallet', command: (event) => {
+        label: 'Ação', icon: 'pi pi-fw pi-wallet', command: () => {
           this.router.navigate(['/acao'])
         }
       },
-      { label: 'Venda', icon: 'pi pi-fw pi-shopping-cart', command: (event) => {
-        this.router.navigate(['/venda'])
+      {
+        label: 'Venda', icon: 'pi pi-fw pi-shopping-cart', command: () => {
+          this.router.navigate(['/venda'])
         }
       },
       {
-        label: 'Ativo', icon: 'pi pi-fw pi-shopping-cart', command: (event) => {
+        label: 'Ativo', icon: 'pi pi-fw pi-shopping-cart', command: () => {
           this.router.navigate(['/ativo'])
         }
       },
-      { label: 'Rel. Compra', icon: 'pi pi-fw pi-book' },
-      { label: 'Rel. Venda', icon: 'pi pi-fw pi-book' },
+      {
+        label: 'Relatório Venda', icon: 'pi pi-fw pi-book', command: () => {
+          this.router.navigate(['/relatorio'])
+        }
+      },
       { label: 'Gráfico', icon: 'pi pi-fw pi-chart-line' },
       { label: 'Documentation', icon: 'pi pi-fw pi-file' },
       { label: 'Settings', icon: 'pi pi-fw pi-cog' }

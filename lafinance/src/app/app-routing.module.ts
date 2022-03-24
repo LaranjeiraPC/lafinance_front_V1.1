@@ -18,6 +18,10 @@ const routes: Routes = [
     path: 'ativo',
     loadChildren: () => import('./_page/ativo/ativo.module').then(m => m.AtivoModule)
   },
+  {
+    path: 'relatorio',
+    loadChildren: () => import('./_page/relatorio/relatorio.module').then(m => m.RelatorioModule)
+  },
 ];
 
 @NgModule({

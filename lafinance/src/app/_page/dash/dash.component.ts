@@ -91,11 +91,4 @@ export class DashComponent implements OnInit {
     });
   }
 
-  // showViaService(response: Response, tipo: string) {
-  //   this._messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
-  //   setTimeout(() => {
-  //     this._messageService.clear();
-  //   }, 3000);
-  // }
-
 }

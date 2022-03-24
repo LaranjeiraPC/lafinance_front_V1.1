@@ -1,0 +1,45 @@
+<p-messages></p-messages>
+
+<div class="p-grid p-fluid" [ngStyle]="{'width': '100%', 'float': 'left'}">
+    <app-title [title]="'Relatório geral das vendas'"></app-title>
+
+    <div >
+        <div [ngStyle]="{'float': 'left', 'padding': '0.2%'}">
+            <h5>Selecione um filtro</h5>
+            <p-listbox [options]="filtros" [(ngModel)]="filtroSelecionado" (click)="getFiltro(filtroSelecionado)">
+            </p-listbox>
+        </div>
+
+        <div *ngIf="opcaoMes" [ngStyle]="{'float': 'left', 'padding': '0.2%', 'padding-left': '1%'}">
+            <h5>Selecione o mês </h5>
+            <p-listbox [options]="filtros" [(ngModel)]="filtroSelecionado" optionLabel="nome">
+            </p-listbox>
+        </div>
+
+        <div *ngIf="opcaoAno" [ngStyle]="{'float': 'left', 'padding': '0.2%', 'padding-left': '1%'}">
+            <h5>Selecione o ano</h5>
+            <p-listbox [options]="anos" [(ngModel)]="anoSelecionado" (click)="selecionarAnoFiltrarRelatorio(anoSelecionado)">
+            </p-listbox>
+        </div>
+
+        <div *ngIf="opcaoAtivo" [ngStyle]="{'float': 'left', 'padding': '0.2%', 'padding-left': '1%'}">
+            <h5>Selecione o ativo</h5>
+            <p-listbox [options]="filtros" [(ngModel)]="filtroSelecionado" optionLabel="nome">
+            </p-listbox>
+        </div>
+
+        <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
+            <button pButton pRipple type="button" label="Filtrar" class="p-button-raised"
+                routerLink="/acao/insert"></button>
+        </span>
+    </div>
+
+
+    
+</div>
+
+<div class="p-grid p-fluid" [ngStyle]="{'width': '100%', 'float': 'left'}">
+    <app-title [title]="''"></app-title>
+
+
+</div>

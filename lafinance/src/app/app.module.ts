@@ -14,12 +14,13 @@ import { AtivoModule } from './_page/ativo/ativo.module';
 import { registerLocaleData } from '@angular/common';
 import localePT from '@angular/common/locales/pt';
 import { VendaModule } from './_page/venda/venda.module';
+import { RelatorioModule } from './_page/relatorio/relatorio.module';
 
 registerLocaleData(localePT);
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +29,7 @@ registerLocaleData(localePT);
     AcaoModule,
     VendaModule,
     AtivoModule,
+    RelatorioModule,
     MenuModule,
     BrowserAnimationsModule,
     MessagesModule,

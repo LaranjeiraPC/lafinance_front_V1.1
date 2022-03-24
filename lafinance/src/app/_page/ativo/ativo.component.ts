@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Ativo } from 'src/app/_model/ativo.model';
+import { TipoResponse } from 'src/app/_response/response';
 import { AtivoService } from './_service/ativo.service';
 
 @Component({
@@ -24,7 +25,7 @@ export class AtivoComponent implements OnInit {
 
   constructor(
     private _ativoService: AtivoService,
-    private messageService: MessageService
+    private _messageService: MessageService
   ) {
     this.options = [
       { label: "Sim", value: "S" },
@@ -68,15 +69,11 @@ export class AtivoComponent implements OnInit {
   editarAtivo(ativo: Ativo) {
     let subscription = this._ativoService.editarAtivo(ativo).subscribe(data => {
       subscription.unsubscribe();
-      if (data) {
-        this.displayModal = false;
-       // this.showViaService(data, "success");
-        this.loadCustomers();
-      } else {
-        this.displayModal = false;
-       // this.showViaService(data, "error");
-        this.loading = false;
-      }
+      this.loading = false;
+      this.displayModal = false;
+      this.showViaService("success", TipoResponse.SUCESSO, "Ativo editado com sucesso");
+    }, () => {
+      this.showViaService("error", TipoResponse.ERRO, "Falha ao editar ativo");
     });
   }
 
@@ -86,15 +83,12 @@ export class AtivoComponent implements OnInit {
       ativo.status = "S";
       let subscription = this._ativoService.cadastrarAtivo(ativo).subscribe(data => {
         subscription.unsubscribe();
-        if (data != null) {
-          this.displayModalCadastrar = false;
-         // this.showViaService(data, "success");
-          this.loadCustomers();
-        } else {
-          this.displayModalCadastrar = false;
-         // this.showViaService(data, "error");
-          this.loading = false;
-        }
+        this.loadCustomers();
+        this.displayModalCadastrar = false;
+        this.loading = false;
+        this.showViaService("success", TipoResponse.SUCESSO, "Ativo cadastrado com sucesso");
+      }, () => {
+        this.showViaService("error", TipoResponse.ERRO, "Falha ao cadastrar ativo");
       });
     }
   }
@@ -105,21 +99,19 @@ export class AtivoComponent implements OnInit {
         subscription.unsubscribe();
         this.displayModalExcluir = false;
         this.displayModal = false;
-        if (data) {
-         // this.showViaService(data, "success");
-        } else {
-         // this.showViaService(data, "error");
-        }
+        this.showViaService("success", TipoResponse.SUCESSO, "Ativo excluído com sucesso");
         this.loadCustomers();
+      }, () => {
+        this.showViaService("error", TipoResponse.ERRO, "Falha ao excluir ativo");
       });
     }
   }
 
-  // showViaService(response: Response, tipo: string) {
-  //   this.messageService.add({ severity: tipo, summary: response.tipo, detail: response.mensagem });
-  //   setTimeout(() => {
-  //     this.messageService.clear();
-  //   }, 3000);
-  // }
+  showViaService(tipo: string, status: string, mensagem: string) {
+    this._messageService.add({ severity: tipo, summary: status, detail: mensagem });
+    setTimeout(() => {
+      this._messageService.clear();
+    }, 3000);
+  }
 
 }
