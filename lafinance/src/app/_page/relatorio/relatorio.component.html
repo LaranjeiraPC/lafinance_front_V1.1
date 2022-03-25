@@ -3,43 +3,82 @@
 <div class="p-grid p-fluid" [ngStyle]="{'width': '100%', 'float': 'left'}">
     <app-title [title]="'Relatório geral das vendas'"></app-title>
 
-    <div >
+    <div>
         <div [ngStyle]="{'float': 'left', 'padding': '0.2%'}">
-            <h5>Selecione um filtro</h5>
-            <p-listbox [options]="filtros" [(ngModel)]="filtroSelecionado" (click)="getFiltro(filtroSelecionado)">
-            </p-listbox>
+            <h3>Selecione o filtro </h3>
+            <p-dropdown [options]="filtros" [(ngModel)]="filtroSelecionado" placeholder="Selecione um filtro"
+                [showClear]="true" (onChange)="getFiltro(filtroSelecionado)"></p-dropdown>
+
         </div>
 
         <div *ngIf="opcaoMes" [ngStyle]="{'float': 'left', 'padding': '0.2%', 'padding-left': '1%'}">
-            <h5>Selecione o mês </h5>
-            <p-listbox [options]="filtros" [(ngModel)]="filtroSelecionado" optionLabel="nome">
-            </p-listbox>
+
         </div>
 
         <div *ngIf="opcaoAno" [ngStyle]="{'float': 'left', 'padding': '0.2%', 'padding-left': '1%'}">
-            <h5>Selecione o ano</h5>
-            <p-listbox [options]="anos" [(ngModel)]="anoSelecionado" (click)="selecionarAnoFiltrarRelatorio(anoSelecionado)">
-            </p-listbox>
+            <h3>Selecione o ano</h3>
+            <p-dropdown [options]="anos" [(ngModel)]="anoSelecionado" placeholder="Selecione o ano" [showClear]="true"
+                (onChange)="selecionarAnoFiltrarRelatorio(anoSelecionado)"></p-dropdown>
         </div>
 
         <div *ngIf="opcaoAtivo" [ngStyle]="{'float': 'left', 'padding': '0.2%', 'padding-left': '1%'}">
-            <h5>Selecione o ativo</h5>
-            <p-listbox [options]="filtros" [(ngModel)]="filtroSelecionado" optionLabel="nome">
-            </p-listbox>
         </div>
-
-        <span class="p-buttonset" [ngStyle]="{'float': 'right', 'padding': '0.2%'}">
-            <button pButton pRipple type="button" label="Filtrar" class="p-button-raised"
-                routerLink="/acao/insert"></button>
-        </span>
     </div>
 
-
-    
 </div>
 
 <div class="p-grid p-fluid" [ngStyle]="{'width': '100%', 'float': 'left'}">
     <app-title [title]="''"></app-title>
+</div>
 
-
+<div class="p-grid p-fluid" [ngStyle]="{'width': '100%', 'float': 'left'}">
+    <p-panel header="Ano">
+        <div *ngFor="let key of getKeysArray">
+            <p>
+                <p-fieldset [toggleable]="true" [transitionOptions]="'5ms'" legend='{{key}}' [toggleable]="true">
+                    <div>
+                        <ng-template pTemplate="header"></ng-template>
+                        <div *ngFor="let value of getValueArray">
+                            <div *ngIf="value.mes == key">
+                                <p>
+                                    <p-fieldset [toggleable]="true" [transitionOptions]="'5ms'" legend='{{value.ativo}}'
+                                        [toggleable]="true">
+                                        <div *ngIf="value.ativo != 'Total Do Mês'">
+                                            <ng-template pTemplate="header">Custom Legend Content</ng-template>
+                                            
+                                            <div [ngStyle]="{'width': '20%', 'float': 'left'}">
+                                                <p [ngStyle]="{'color': 'grey'}">Compra</p>
+                                                <p>Quantidade Comprada: {{value.quantidadeComprado}}</p>
+                                                <p>Valor Ativo Pago: {{value.valorAtivoPago}}</p>
+                                                <p>Valor Bruto Pago: {{value.valorBrutoPago}}</p>
+                                                <p>Data Compra: {{value.dataCompra}}</p>
+                                            </div>
+                                            
+                                            <div [ngStyle]="{'width': '20%', 'float': 'left'}">
+                                                <p [ngStyle]="{'color': 'grey'}">Venda</p>
+                                                <p>Quantidade Vendida: {{value.quantidadeVendido}}</p>
+                                                <p>Valor Ativo Venda: {{value.valorAtivoVenda}}</p>
+                                                <p>Valor Bruto Venda: {{value.valorBrutoVenda}}</p>
+                                                <p>Data Venda: {{value.dataVenda}}</p>
+                                            </div>
+                                            <div [ngStyle]="{'width': '20%', 'float': 'left'}">
+                                                <p [ngStyle]="{'color': 'grey'}">Total</p>
+                                                <p>Lucro Bruto Total: {{value.lucroBrutoTotal}}</p>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="value.ativo == 'Total Do Mês'">
+                                            <ng-template pTemplate="header">Custom Legend Content</ng-template>
+                                            <div [ngStyle]="{'width': '20%', 'float': 'left'}">
+                                                <p>Lucro Bruto Total: {{value.lucroBrutoTotal}}</p>
+                                            </div>
+                                        </div>
+                                    </p-fieldset>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </p-fieldset>
+            </p>
+        </div>
+    </p-panel>
 </div>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { Relatorio } from 'src/app/_model/relatorio.model';
+import { RelatorioDetalhe } from 'src/app/_model/relatorioDetalhe.model';
 import { TipoResponse } from 'src/app/_response/response';
 import { CompraVendaService } from '../_service/compraVenda.service';
 import { RelatorioService } from './_service/relatorio.service';
@@ -32,6 +34,12 @@ export class RelatorioComponent implements OnInit {
   opcaoAno: boolean = false;
   opcaoAtivo: boolean = false;
 
+  relatorio: Map<string, RelatorioDetalhe[]> = new Map;
+  getKeysArray: string[] = [];
+  getValueArray: RelatorioDetalhe[] = [];
+
+  totalMes: Map<string, number> = new Map;
+
   constructor(
     private _compraVendaService: CompraVendaService,
     private _relatorioService: RelatorioService,
@@ -44,6 +52,8 @@ export class RelatorioComponent implements OnInit {
   }
 
   getFiltro(opcao: string): void {
+    this.getKeysArray = [];
+    this.getValueArray = [];
     switch (opcao) {
       case 'Mês e Ano':
         this.opcaoAno = false;
@@ -62,7 +72,16 @@ export class RelatorioComponent implements OnInit {
   selecionarAnoFiltrarRelatorio(ano: number): void {
     let subscription = this._relatorioService.consultarDadosAno(ano).subscribe(data => {
       subscription.unsubscribe();
-      console.log(data);
+      this.relatorio = data;
+      this.getKeysArray = Object.keys(this.relatorio);
+      var temporarioValues: any[] = Object.values(this.relatorio);
+
+      temporarioValues.forEach(t => {
+        var lista: RelatorioDetalhe[] = t;
+        lista.forEach(l => {
+          this.getValueArray.push(l);
+        });
+      });
     }, () => {
       this.showViaService("error", TipoResponse.ERRO, "Falha ao consultar dados do relatório");
     });

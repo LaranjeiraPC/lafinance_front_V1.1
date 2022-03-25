@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RelatorioDetalhe } from 'src/app/_model/relatorioDetalhe.model';
 import { Config } from 'src/environments/config';
 
 @Injectable({
@@ -12,7 +13,7 @@ export class RelatorioService {
 
     constructor(private http: HttpClient) { }
 
-    consultarDadosAno(ano: number): Observable<any> {
-        return this.http.get<any>(this.URL + "/search/" + ano);
+    consultarDadosAno(ano: number): Observable<Map<string, RelatorioDetalhe[]>> {
+        return this.http.get<Map<string, RelatorioDetalhe[]>>(this.URL + "/search/" + ano);
     }
 }

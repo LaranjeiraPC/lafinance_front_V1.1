@@ -18,6 +18,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RelatorioRoutingModule } from "./relatorio.routing.module";
 import { RelatorioComponent } from "./relatorio.component";
 import { ListboxModule } from 'primeng/listbox';
+import { PanelModule } from 'primeng/panel';
+import { FieldsetModule } from 'primeng/fieldset';
 
 registerLocaleData(localePT);
 
@@ -39,7 +41,9 @@ registerLocaleData(localePT);
         DialogModule,
         SelectButtonModule,
         DropdownModule,
-        ListboxModule
+        ListboxModule,
+        PanelModule,
+        FieldsetModule
     ],
     exports: [CalendarModule],
     providers: [
